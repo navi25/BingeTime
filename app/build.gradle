@@ -31,10 +31,16 @@ android {
 dependencies {
     def lifecycle_version = "1.1.1"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // Android Lifecycle for ViewModelProviders etc
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    //android support and design
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
 
     //Firebase
     implementation 'com.google.firebase:firebase-core:16.0.1'

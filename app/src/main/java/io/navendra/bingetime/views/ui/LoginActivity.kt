@@ -1,4 +1,4 @@
-package io.navendra.bingetime.views
+package io.navendra.bingetime.views.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -77,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
                 Timber.d { "User Successfully signed In!!" }
                 Timber.i { "User : " + user?.toString() }
                 Timber.d { "Starting HomeActivity!"}
-                startActivity(Intent(this@LoginActivity,HomeActivity::class.java))
+                startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
 
             } else {
                 Timber.d { "SignIn Failed!!"}
