@@ -18,15 +18,18 @@ import java.util.*
 
 class LoginActivity : AppCompatActivity() {
 
+    //region VARIABLES - networkService, SignInInt, loginBoolean
     private val networkService : NetworkService by lazy { NetworkService.getInstance(this) }
     private val RC_SIGN_IN = 123
-
+    private var isUserLoggedIn : Boolean? = false
+    private var USER_LOGIN_CHECK_KEY = "isUserLoggedIn"
+    //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TimberLogging()
         setContentView(R.layout.activity_login)
-
+        isUserLoggedIn = savedInstanceState?.getBoolean(USER_LOGIN_CHECK_KEY)
         welcomeText.text = WelcomeDataProvider.getWelcomeData()
         welcomeText.visibility = View.VISIBLE
 
@@ -41,12 +44,39 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    fun showOfflineLoginUI(){
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        isUserLoggedIn = savedInstanceState?.getBoolean(USER_LOGIN_CHECK_KEY)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.run {
+            putBoolean(USER_LOGIN_CHECK_KEY, isUserLoggedIn?:false)
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        goToHome()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        goToHome()
+    }
+
+    private fun goToHome(){
+        if(isUserLoggedIn==true){ //this if check is required because of nullable boolean type
+            startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
+            finish()
+        }
+    }
+
+    private fun showOfflineLoginUI(){
         welcomeText.visibility = View.VISIBLE
     }
 
-
-    fun showLogin(){
+    private fun showLogin(){
         welcomeText.visibility = View.GONE
         var providers = Arrays.asList(
                 AuthUI.IdpConfig.EmailBuilder().build(),
@@ -63,7 +93,6 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -77,7 +106,9 @@ class LoginActivity : AppCompatActivity() {
                 Timber.d { "User Successfully signed In!!" }
                 Timber.i { "User : " + user?.toString() }
                 Timber.d { "Starting HomeActivity!"}
+                this.isUserLoggedIn = true
                 startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
+                finish()
 
             } else {
                 Timber.d { "SignIn Failed!!"}

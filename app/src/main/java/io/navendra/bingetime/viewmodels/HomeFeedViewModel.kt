@@ -25,4 +25,7 @@ class HomeFeedViewModel : ViewModel(){
     }
 
     fun getFeedDataSet() = feedDataSet
+
+    fun getFeedData() = feedData
+
 }
